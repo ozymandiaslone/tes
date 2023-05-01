@@ -36,5 +36,10 @@ Each server has a queue which contains all unanswered queries, aka pending jobs.
 When the server has adequate resources, it grabs a job from the queue and generates a helpful response based on the given resources and human input. It then sends the resonse to the client, and repeats the process.
 
 ## Server addons (TODO)
-- [ ] Allow for larger/longer textual resource input by addinga  preprocesssing step wherein the server takes manageable but large chunks of resources, compresses that down into its gist, and then combines all of the summarized chunks to form a response with the human input.
+- [ ] Allow for larger/longer textual resource input by adding a  preprocesssing step wherein the server takes manageable but large chunks of resources, compresses that down into its gist, and then combines all of the summarized chunks to form a response with the human input.
 - [ ] Allow the server to generate wikipedia queries and add data from wikipedia to its resources when generating a helpful response.
+
+# [UNDER DEVELOPMENT]
+- [ ] Implement super basic API on one server.
+- [ ] Implement rough draft of web client to interact with API.
+- [ ] Upgrate API & site...
