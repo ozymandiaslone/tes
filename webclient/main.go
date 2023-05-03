@@ -28,7 +28,6 @@ type ResponsePageData struct {
 	UUID string
 }
 
-// PageData to populate the page
 type PageData struct {
 	Title string
 }
@@ -38,13 +37,10 @@ type ApiData struct {
 	Query     string
 }
 
-// Index handling function
 func index(w http.ResponseWriter, r *http.Request) {
-
 	data := PageData{
 		Title: "T.E.S.",
 	}
-
 	idxtmpl.Execute(w, data)
 }
 
@@ -54,7 +50,6 @@ func response(w http.ResponseWriter, r *http.Request) {
 	respgdata := ResponsePageData{
 		UUID: uuid,
 	}
-
 	restmpl.Execute(w, respgdata)
 }
 
@@ -62,7 +57,6 @@ func response(w http.ResponseWriter, r *http.Request) {
 func query(w http.ResponseWriter, r *http.Request) {
 	id := uuid.New()
 	w.Header().Set("Content-Type", "application/json")
-
 	err := r.ParseForm()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -74,7 +68,7 @@ func query(w http.ResponseWriter, r *http.Request) {
 		HumanQuery: r.Form.Get("humanquery"),
 		UUID:       id.String(),
 	}
-	//TODO actually go get url data and place it in a new struct
+
 	fmt.Println(queryData.HumanQuery)
 	fmt.Println(queryData.URLcsv)
 	fmt.Println(queryData.UUID)
