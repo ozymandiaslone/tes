@@ -107,9 +107,10 @@ func serverResponse(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+
 	router := mux.NewRouter()
-	idxtmpl = template.Must(template.ParseFiles("templates/index.html"))
-	restmpl = template.Must(template.ParseFiles("templates/resp.html"))
+	idxtmpl = template.Must(template.ParseFiles("./templates/index.html"))
+	restmpl = template.Must(template.ParseFiles("./templates/resp.html"))
 
 	fs := http.FileServer(http.Dir("./static"))
 	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fs))
