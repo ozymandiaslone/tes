@@ -40,14 +40,18 @@ When the server has adequate resources, it grabs a job from the queue and genera
 
 ❌ Allow the server to generate wikipedia queries and add data from wikipedia to its resources when generating a helpful response.
 
-# [UNDER DEVELOPMENT]
-✅ Implement super basic API on one server (VERY BASIC, just serving files & accepting POST requests rn.
+❌ Allow the server to search the major internet browsers & read results.
 
-✅ INCREDIBLY rough draft of web client to interact with API.
+# [UNDER DEVELOPMENT]
+✅ ~~Implement super basic API on one server (VERY BASIC, just serving files & accepting POST requests rn.~~
+
+✅ ~~INCREDIBLY rough draft of web client to interact with API.~~
 
 ❌ Do some css styling. The website looks horrible.
 
-❌ Add the LLM to the server, allowing it to process queries.
+✅ ~~Add the LLM to the server, allowing it to process queries.~~
 
-❌ Figure out exactly how I'm going to handle the responses to the clients.
+✅ ~~Figure out exactly how I'm going to handle the responses to the clients.~~ It was just UUID's 
+
+❌ Clean up and fix github/project structure. (I'm still learning, help would be accepted lol)
 
