@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"path/filepath"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
@@ -109,9 +110,13 @@ func serverResponse(w http.ResponseWriter, r *http.Request) {
 func main() {
 
 	router := mux.NewRouter()
-	idxtmpl = template.Must(template.ParseFiles("./templates/index.html"))
-	restmpl = template.Must(template.ParseFiles("./templates/resp.html"))
 
+	tmplDir, err := filepath.Abs("templates")
+	if err != nil {
+		log.Fatal(err)
+	}
+	idxtmpl = template.Must(template.ParseFiles(filepath.Join(tmplDir, "index.html")))
+	restmpl = template.Must(template.ParseFiles(filepath.Join(tmplDir, "resp.html")))
 	fs := http.FileServer(http.Dir("./static"))
 	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fs))
 	router.HandleFunc("/", index).Methods("GET")
