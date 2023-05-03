@@ -1,3 +1,6 @@
 [submodule "llmserver/go-llama.cpp"]
 	path = llmserver/go-llama.cpp
 	url = https://github.com/go-skynet/go-llama.cpp
+[submodule "llmserver/server"]
+	path = llmserver/server
+	url = https://github.com/ozymandiaslone/tes/llmserver/server
