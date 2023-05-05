@@ -8,17 +8,17 @@ import (
 	"net/http"
 	"net/url"
 	"path/filepath"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 )
 
-// Templates for each page
 var idxtmpl *template.Template
 var restmpl *template.Template
 var uuidAPIResponses = make(map[string]string)
+var servers []string
 
-// QueryData used to generate a response with the LLM
 type QueryData struct {
 	URLcsv     string
 	HumanQuery string
@@ -54,7 +54,6 @@ func response(w http.ResponseWriter, r *http.Request) {
 	restmpl.Execute(w, respgdata)
 }
 
-// Query handling function
 func query(w http.ResponseWriter, r *http.Request) {
 	id := uuid.New()
 	w.Header().Set("Content-Type", "application/json")
@@ -80,7 +79,9 @@ func query(w http.ResponseWriter, r *http.Request) {
 	sendData.Set("UUID", queryData.UUID)
 	_, err = http.PostForm("http://localhost:9090/query", sendData)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
+		//Do something about this
+		return
 	}
 
 	http.Redirect(w, r, "/response/"+id.String(), 303)
@@ -107,10 +108,52 @@ func serverResponse(w http.ResponseWriter, r *http.Request) {
 	uuidAPIResponses[uuid] = resp
 }
 
+func popIdx(servers *[]string, idx int) {
+	*servers = append((*servers)[:idx], (*servers)[idx+1:]...)
+}
+
+func startServer(router *mux.Router) {
+	log.Fatal(http.ListenAndServe(":9091", router))
+}
+
+func checkAlive(url string) bool {
+	resp, err := http.Get(url + "/pulse")
+	if err != nil {
+		return false
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode == 200 {
+		return true
+	}
+	return false
+}
+
+func manageServers(servers *[]string) {
+	for i := 0; i < len(*servers); i++ {
+		if !checkAlive((*servers)[i]) {
+			popIdx(servers, i)
+		}
+	}
+	time.Sleep(time.Second * 2)
+}
+
+func serverListHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(servers)
+}
+
+func startupPingHandler(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	ip := r.Form.Get("ip")
+	servers = append(servers, ip)
+}
+
 func main() {
-
 	router := mux.NewRouter()
-
 	tmplDir, err := filepath.Abs("templates")
 	if err != nil {
 		log.Fatal(err)
@@ -124,6 +167,10 @@ func main() {
 	router.HandleFunc("/response/{UUID}", response).Methods("GET")
 	router.HandleFunc("/response/{UUID}/sync", sync).Methods("GET")
 	router.HandleFunc("/server-response/{UUID}", serverResponse).Methods("POST")
+	router.HandleFunc("/startup-ping", startupPingHandler).Methods("POST")
+	router.HandleFunc("/server-list", serverListHandler)
+	go startServer(router)
+	go manageServers(&servers)
 	fmt.Println("Listening on :9091")
-	log.Fatal(http.ListenAndServe(":9091", router))
+	select {}
 }

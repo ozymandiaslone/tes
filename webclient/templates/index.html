@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/static/idx.js"></script>
     <link rel="stylesheet" href="/static/style.css">
     <title>{{ .Title }}</title>
   </head>
   <body>
-    <h1>AYO!!!</h1>
-    <p>Tesing, one two three.</p>
+    <h1>Welcome to TESWeb!</h1>
+    <p>This is a platform for developers to create and release their own LLM's for use by the general public</p>
     <form action="/query" method="POST">
       <div>
         <label for="humanquery">What woud you like to ask?</label>
@@ -23,6 +25,9 @@
         <button>Send Query!</button>
       </div>
     </form>
+    <button id="refresh" onclick="updateServerList()">Refresh</button>
+    <label for="servers">Online Servers: </label>
+    <div id="servers-online"></div>
     
   </body>
 </html>
